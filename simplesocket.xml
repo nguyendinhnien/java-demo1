@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="simplesocket" default="all">
+  
+  
+  <property file="simplesocket.properties"/>
+  <!-- Uncomment the following property if no tests compilation is needed -->
+  <!-- 
+  <property name="skip.tests" value="true"/>
+   -->
+  
+  <!-- Compiler options -->
+  
+  <property name="compiler.debug" value="on"/>
+  <property name="compiler.generate.no.warnings" value="off"/>
+  <property name="compiler.args" value=""/>
+  <property name="compiler.max.memory" value="700m"/>
+  <patternset id="ignored.files">
+    <exclude name="**/*.hprof/**"/>
+    <exclude name="**/*.pyc/**"/>
+    <exclude name="**/*.pyo/**"/>
+    <exclude name="**/*.rbc/**"/>
+    <exclude name="**/*.yarb/**"/>
+    <exclude name="**/*~/**"/>
+    <exclude name="**/.DS_Store/**"/>
+    <exclude name="**/.git/**"/>
+    <exclude name="**/.hg/**"/>
+    <exclude name="**/.svn/**"/>
+    <exclude name="**/CVS/**"/>
+    <exclude name="**/__pycache__/**"/>
+    <exclude name="**/_svn/**"/>
+    <exclude name="**/vssver.scc/**"/>
+    <exclude name="**/vssver2.scc/**"/>
+  </patternset>
+  <patternset id="library.patterns">
+    <include name="*.war"/>
+    <include name="*.swc"/>
+    <include name="*.apk"/>
+    <include name="*.zip"/>
+    <include name="*.ear"/>
+    <include name="*.egg"/>
+    <include name="*.ane"/>
+    <include name="*.jar"/>
+  </patternset>
+  <patternset id="compiler.resources">
+    <exclude name="**/?*.java"/>
+    <exclude name="**/?*.form"/>
+    <exclude name="**/?*.class"/>
+    <exclude name="**/?*.groovy"/>
+    <exclude name="**/?*.scala"/>
+    <exclude name="**/?*.flex"/>
+    <exclude name="**/?*.kt"/>
+    <exclude name="**/?*.clj"/>
+    <exclude name="**/?*.aj"/>
+  </patternset>
+  
+  
+  <!-- Project Libraries -->
+  
+  <path id="library.libs.classpath">
+    <fileset dir="${basedir}/libs">
+      <patternset refid="library.patterns"/>
+    </fileset>
+  </path>
+  
+  
+  <!-- Global Libraries -->
+  
+  <!-- Modules -->
+  
+  
+  <!-- Module simpleSocket -->
+  
+  <dirname property="module.simplesocket.basedir" file="${ant.file}"/>
+  
+  
+  
+  <property name="compiler.args.simplesocket" value="-encoding UTF-8 -source 1.6 -target 1.6 ${compiler.args}"/>
+  
+  <property name="simplesocket.output.dir" value="${module.simplesocket.basedir}/out/production/simpleSocket"/>
+  <property name="simplesocket.testoutput.dir" value="${module.simplesocket.basedir}/out/test/simpleSocket"/>
+  
+  <path id="simplesocket.module.bootclasspath">
+    <!-- Paths to be included in compilation bootclasspath -->
+  </path>
+  
+  <path id="simplesocket.module.production.classpath">
+    <path refid="library.libs.classpath"/>
+  </path>
+  
+  <path id="simplesocket.runtime.production.module.classpath">
+    <pathelement location="${simplesocket.output.dir}"/>
+    <path refid="library.libs.classpath"/>
+  </path>
+  
+  <path id="simplesocket.module.classpath">
+    <pathelement location="${simplesocket.output.dir}"/>
+    <path refid="library.libs.classpath"/>
+  </path>
+  
+  <path id="simplesocket.runtime.module.classpath">
+    <pathelement location="${simplesocket.testoutput.dir}"/>
+    <pathelement location="${simplesocket.output.dir}"/>
+    <path refid="library.libs.classpath"/>
+  </path>
+  
+  
+  <patternset id="excluded.from.module.simplesocket">
+    <patternset refid="ignored.files"/>
+  </patternset>
+  
+  <patternset id="excluded.from.compilation.simplesocket">
+    <patternset refid="excluded.from.module.simplesocket"/>
+  </patternset>
+  
+  <path id="simplesocket.module.sourcepath">
+    <dirset dir="${module.simplesocket.basedir}">
+      <include name="src"/>
+      <include name="config"/>
+    </dirset>
+  </path>
+  
+  
+  <target name="compile.module.simplesocket" depends="compile.module.simplesocket.production,compile.module.simplesocket.tests" description="Compile module simpleSocket"/>
+  
+  <target name="compile.module.simplesocket.production" description="Compile module simpleSocket; production classes">
+    <mkdir dir="${simplesocket.output.dir}"/>
+    <javac destdir="${simplesocket.output.dir}" debug="${compiler.debug}" nowarn="${compiler.generate.no.warnings}" memorymaximumsize="${compiler.max.memory}" fork="true">
+      <compilerarg line="${compiler.args.simplesocket}"/>
+      <bootclasspath refid="simplesocket.module.bootclasspath"/>
+      <classpath refid="simplesocket.module.production.classpath"/>
+      <src refid="simplesocket.module.sourcepath"/>
+      <patternset refid="excluded.from.compilation.simplesocket"/>
+    </javac>
+    
+    <copy todir="${simplesocket.output.dir}">
+      <fileset dir="${module.simplesocket.basedir}/src">
+        <patternset refid="compiler.resources"/>
+        <type type="file"/>
+      </fileset>
+      <fileset dir="${module.simplesocket.basedir}/config">
+        <patternset refid="compiler.resources"/>
+        <type type="file"/>
+      </fileset>
+    </copy>
+  </target>
+  
+  <target name="compile.module.simplesocket.tests" depends="compile.module.simplesocket.production" description="compile module simpleSocket; test classes" unless="skip.tests"/>
+  
+  <target name="clean.module.simplesocket" description="cleanup module">
+    <delete dir="${simplesocket.output.dir}"/>
+    <delete dir="${simplesocket.testoutput.dir}"/>
+  </target>
+  
+  <target name="init" description="Build initialization">
+    <!-- Perform any build initialization in this target -->
+  </target>
+  
+  <target name="clean" depends="clean.module.simplesocket, clean.artifact.deploy" description="cleanup all"/>
+  
+  <target name="build.modules" depends="init, clean, compile.module.simplesocket" description="build all modules"/>
+  
+  <target name="init.artifacts">
+    <property name="artifacts.temp.dir" value="${basedir}/__artifacts_temp"/>
+    <property name="artifact.output.deploy" value="${basedir}/out/artifacts/deploy"/>
+    <mkdir dir="${artifacts.temp.dir}"/>
+    <property name="temp.jar.path.main.jar" value="${artifacts.temp.dir}/main.jar"/>
+  </target>
+  
+  <target name="clean.artifact.deploy" description="clean deploy artifact output">
+    <delete dir="${artifact.output.deploy}"/>
+  </target>
+  
+  <target name="artifact.deploy" depends="init.artifacts, compile.module.simplesocket" description="Build &#39;deploy&#39; artifact">
+    <mkdir dir="${artifact.output.deploy}"/>
+    <jar destfile="${temp.jar.path.main.jar}" duplicate="preserve" filesetmanifest="mergewithoutmain">
+      <zipfileset dir="${simplesocket.output.dir}"/>
+    </jar>
+    <copy file="${temp.jar.path.main.jar}" tofile="${artifact.output.deploy}/main.jar"/>
+    <mkdir dir="${artifact.output.deploy}/config"/>
+    <copy todir="${artifact.output.deploy}/config">
+      <fileset dir="${basedir}/config"/>
+    </copy>
+    <mkdir dir="${artifact.output.deploy}/libs"/>
+    <copy todir="${artifact.output.deploy}/libs">
+      <fileset dir="${basedir}/libs"/>
+    </copy>
+  </target>
+  
+  <target name="build.all.artifacts" depends="artifact.deploy" description="Build all artifacts">
+    
+    <!-- Delete temporary files -->
+    <delete dir="${artifacts.temp.dir}"/>
+  </target>
+  
+  <target name="all" depends="build.modules, build.all.artifacts" description="build all"/>
+</project>

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="deploy">
+
+    <import file="simpleSocket.xml"/>
+    <property file="deploy.properties"/>
+
+    <target name="deploy.transferFileLocal" depends="artifact.deploy" description="Transfer files ${projectName}">
+        <delete dir="${targetDirectory}/config"></delete>
+        <delete dir="${targetDirectory}/libs"></delete>
+        <delete dir="${targetDirectory}/${jarFile}"></delete>
+
+        <mkdir dir="${targetDirectory}/config"></mkdir>
+        <mkdir dir="${targetDirectory}/lib"></mkdir>
+
+        <copy todir="${targetDirectory}/config">
+            <fileset dir="${artifact.output.deploy}/config"></fileset>
+        </copy>
+        <copy todir="${targetDirectory}/libs">
+            <fileset dir="${artifact.output.deploy}/libs"></fileset>
+        </copy>
+
+        <copy file="${artifact.output.deploy}/${jarFile}" tofile="${targetDirectory}/${jarFile}"></copy>
+    </target>
+</project>
