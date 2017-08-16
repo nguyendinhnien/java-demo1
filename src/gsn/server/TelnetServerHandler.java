@@ -29,12 +29,12 @@ public class TelnetServerHandler extends SimpleChannelInboundHandler<String> {
         String response;
         boolean close = false;
         if (request.isEmpty()) {
-            response = "Please type something.\r\n";
-        } else if ("bye".equals(request.toLowerCase())) {
-            response = "Have a good day!\r\n";
+            response = "Viết gì đó đi mà.\r\n";
+        } else if ("chao".equals(request.toLowerCase())) {
+            response = "Chào !\r\n";
             close = true;
         } else {
-            response = "Did you say '" + request + "'?\r\n";
+            response = "Ngưng gõ nhảm  '" + request + "'?\r\n";
         }
 
         // We do not need to write a ChannelBuffer here.
